@@ -1,5 +1,11 @@
 $.get("https://loteriascaixa-api.herokuapp.com/api/lotofacil", function (resultado) {
-    const dezenas = resultado.map((a) => a.dezenas).slice(0, 100);
+    const dezenas = resultado.map((a) => {
+        return {
+            dezenas: a.dezenas,
+            concurso: a.concurso
+        }
+    }).slice(0, 20);
+
     const numbers = [
         { id: 1, qtd: 0 },
         { id: 2, qtd: 0 },
@@ -29,7 +35,7 @@ $.get("https://loteriascaixa-api.herokuapp.com/api/lotofacil", function (resulta
     ]
 
     for (const x of dezenas) {
-        x.map((a) => numbers[parseInt(a) - 1].qtd = numbers[parseInt(a) - 1].qtd + 1);
+        x.dezenas.map((a) => numbers[parseInt(a) - 1].qtd = numbers[parseInt(a) - 1].qtd + 1);
     }
 
     const ordened = numbers.sort(function (a, b) {
@@ -43,6 +49,7 @@ $.get("https://loteriascaixa-api.herokuapp.com/api/lotofacil", function (resulta
     });
 
     const div = document.getElementById('div-results');
+    const last = document.getElementById('last-results');
 
     const laoding = document.getElementById('loading');
 
@@ -54,6 +61,26 @@ $.get("https://loteriascaixa-api.herokuapp.com/api/lotofacil", function (resulta
         newP.innerHTML = value.length == 1 ? `0${value}` : value;
 
         div.append(newP);
+    })
+
+    dezenas.map((n) => {
+        const title = document.createElement('p');
+        title.innerText = 'Concurso: ' + n.concurso;
+        const newHr = document.createElement('hr');
+        const newDiv = document.createElement('div');
+        newDiv.classList.add('results')
+
+        n.dezenas.map((a) => {
+            const newP = document.createElement('p');
+
+            newP.innerHTML = a;
+
+            newDiv.append(newP);
+        })
+
+        last.append(title);
+        last.append(newDiv);
+        last.append(newHr);
     })
 
     laoding.style.cssText = 'display: none;'
