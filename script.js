@@ -4,7 +4,7 @@ $.get("https://loteriascaixa-api.herokuapp.com/api/lotofacil", function (resulta
             dezenas: a.dezenas,
             concurso: a.concurso
         }
-    }).slice(0, 20);
+    }).slice(0, 15);
 
     const numbers = [
         { id: 1, qtd: 0 },
