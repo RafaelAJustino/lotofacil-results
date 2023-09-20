@@ -1,10 +1,14 @@
+function selected(entry) {
+}
+
 $.get("https://loteriascaixa-api.herokuapp.com/api/lotofacil", function (resultado) {
     const dezenas = resultado.map((a) => {
         return {
             dezenas: a.dezenas,
             concurso: a.concurso
         }
-    }).slice(0, 15);
+        // });
+    });
 
     const numbers = [
         { id: 1, qtd: 0 },
@@ -34,7 +38,7 @@ $.get("https://loteriascaixa-api.herokuapp.com/api/lotofacil", function (resulta
         { id: 25, qtd: 0 },
     ]
 
-    for (const x of dezenas) {
+    for (const x of dezenas.slice(0, 100)) {
         x.dezenas.map((a) => numbers[parseInt(a) - 1].qtd = numbers[parseInt(a) - 1].qtd + 1);
     }
 
@@ -58,7 +62,20 @@ $.get("https://loteriascaixa-api.herokuapp.com/api/lotofacil", function (resulta
 
         const value = n.id.toString();
 
+        newP.classList.add(value.length == 1 ? `0${value}` : value);
+
         newP.innerHTML = value.length == 1 ? `0${value}` : value;
+
+        $(newP).on("click", function () {
+            $(`.${this.innerText}`).each(function () {
+                const hasClass = $(this).hasClass("selected");
+                if (hasClass) {
+                    this.classList.remove('selected')
+                } else {
+                    this.classList.add('selected')
+                }
+            });
+        });
 
         div.append(newP);
     })
@@ -73,7 +90,19 @@ $.get("https://loteriascaixa-api.herokuapp.com/api/lotofacil", function (resulta
         n.dezenas.map((a) => {
             const newP = document.createElement('p');
 
+            newP.classList.add(a)
             newP.innerHTML = a;
+
+            $(newP).on("click", function () {
+                $(`.${this.innerText}`).each(function () {
+                    const hasClass = $(this).hasClass("selected");
+                    if (hasClass) {
+                        this.classList.remove('selected')
+                    } else {
+                        this.classList.add('selected')
+                    }
+                });
+            });
 
             newDiv.append(newP);
         })
@@ -84,4 +113,4 @@ $.get("https://loteriascaixa-api.herokuapp.com/api/lotofacil", function (resulta
     })
 
     laoding.style.cssText = 'display: none;'
-})
+});
